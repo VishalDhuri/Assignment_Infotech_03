@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    body {
+        font-family: 'Arial', sans-serif;
+        text-align: center;
+        background-image: url("https://th.bing.com/th/id/R.6b3c80ec6a42bb19af93dd8e6f3f9760?rik=u20Y%2b1DotOrJhg&riu=http%3a%2f%2fwonderfulengineering.com%2fwp-content%2fuploads%2f2014%2f04%2fcode-wallpaper-2.jpeg&ehk=aYy1QdvjR%2fnY%2b2zWmeaLbaTUbmGvakDdBYFDd1QxLD0%3d&risl=&pid=ImgRaw&r=0");
+    }
+
+    #board {
+      position: absolute;
+      left: 38%;
+      top: 20%;
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 5px;
+      margin: 20px auto;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      font-size: 5em;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      background-color:rgb(98, 94, 102);
+    }
+
+    .cell:hover{
+      background-color: rgb(149, 126, 171);
+    }
+
+    span{
+      position: absolute;
+      top: 12%;
+      left: 38.5%;
+      font-size: 3em;
+      background-color: rgb(212, 198, 209);
+    }
+    </style>
+<title>Tic-Tac-Toe</title>
+</head>
+<body>
+
+<span>_Tic-Tac-Toe_</span>
+
+<div id="board"></div>
+
+<script>
+  const board = document.getElementById('board');
+  let currentPlayer = 'X';
+  let gameBoard = ['', '', '', '', '', '', '', '', ''];
+  let gameActive = true;
+
+  function checkWinner() {
+    const winPatterns = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+      [0, 4, 8], [2, 4, 6]             // Diagonals
+    ];
+
+    for (const pattern of winPatterns) {
+      const [a, b, c] = pattern;
+      if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+        return gameBoard[a];
+      }
+    }
+
+    return null;
+  }
+
+  function checkTie() {
+    return gameBoard.every(cell => cell !== '');
+  }
+
+  function handleClick(index) {
+    if (!gameBoard[index] && gameActive) {
+      gameBoard[index] = currentPlayer;
+      renderBoard();
+      const winner = checkWinner();
+      if (winner) {
+        alert(`Player ${winner} wins!`);
+        gameActive = false;
+      } else if (checkTie()) {
+        alert("It's a tie!");
+        gameActive = false;
+      } else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      }
+    }
+  }
+
+  function renderBoard() {
+    board.innerHTML = '';
+    gameBoard.forEach((value, index) => {
+      const cell = document.createElement('div');
+      cell.classList.add('cell');
+      cell.textContent = value;
+      cell.addEventListener('click', () => handleClick(index));
+      board.appendChild(cell);
+    });
+  }
+
+  renderBoard();
+</script>
+
+</body>
